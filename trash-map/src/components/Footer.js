@@ -1,17 +1,18 @@
  import React from "react";
+import { THEME } from "../constants/theme";
 
 const Footer = () => {
   const styles = {
     footer: {
       width: "100%",
-      padding: "20px",
-      backgroundColor: "rgba(20, 90, 50, 0.95)",
-      color: "white",
+      padding: THEME.spacing.medium,
+      backgroundColor: THEME.colors.primary,
+      color: THEME.colors.white,
       textAlign: "center",
       position: "fixed",
       bottom: 0,
       left: 0,
-      fontFamily: "Arial, Helvetica, sans-serif",
+      fontFamily: THEME.fonts.primary,
     },
   };
 

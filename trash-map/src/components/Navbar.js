@@ -1,16 +1,17 @@
  import React from "react";
+import { THEME } from "../constants/theme";
 
 const Navbar = () => {
   const styles = {
     navbar: {
       width: "100%",
-      padding: "20px 40px",
+      padding: `${THEME.spacing.medium} ${THEME.spacing.large}`,
       display: "flex",
       justifyContent: "space-between",
       alignItems: "center",
-      backgroundColor: "rgba(20, 90, 50, 0.95)",
-      color: "white",
-      fontFamily: "Arial, Helvetica, sans-serif",
+      backgroundColor: THEME.colors.primary,
+      color: THEME.colors.white,
+      fontFamily: THEME.fonts.primary,
       position: "fixed",
       top: 0,
       left: 0,
@@ -22,10 +23,10 @@ const Navbar = () => {
     },
     navLinks: {
       display: "flex",
-      gap: "20px",
+      gap: THEME.spacing.medium,
     },
     link: {
-      color: "white",
+      color: THEME.colors.white,
       textDecoration: "none",
       fontWeight: "500",
     },
