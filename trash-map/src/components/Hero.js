@@ -1,4 +1,5 @@
  import React from "react";
+import { THEME } from "../constants/theme";
 
 const Hero = () => {
   const styles = {
@@ -12,20 +13,20 @@ const Hero = () => {
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      fontFamily: "Arial, Helvetica, sans-serif",
+      fontFamily: THEME.fonts.primary,
     },
     overlay: {
-      backgroundColor: "rgba(20, 90, 50, 0.85)",
-      padding: "60px 80px",
+      backgroundColor: THEME.colors.primaryLight,
+      padding: `${THEME.spacing.xlarge} 80px`,
       borderRadius: "20px",
       textAlign: "center",
-      color: "white",
+      color: THEME.colors.white,
       boxShadow: "0 10px 40px rgba(0,0,0,0.4)",
     },
     title: {
       fontSize: "64px",
       fontWeight: "800",
-      marginBottom: "20px",
+      marginBottom: THEME.spacing.medium,
       letterSpacing: "2px",
     },
     subtitle: {

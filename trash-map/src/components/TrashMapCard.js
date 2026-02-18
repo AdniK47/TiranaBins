@@ -1,15 +1,16 @@
  import React from "react";
+import { THEME } from "../constants/theme";
 
 const TrashMapCard = ({ name, latitude, longitude }) => {
   const styles = {
     card: {
-      backgroundColor: "white",
-      padding: "20px",
+      backgroundColor: THEME.colors.white,
+      padding: THEME.spacing.medium,
       borderRadius: "12px",
       boxShadow: "0 5px 20px rgba(0,0,0,0.15)",
-      margin: "10px",
+      margin: THEME.spacing.small,
       width: "250px",
-      fontFamily: "Arial, Helvetica, sans-serif",
+      fontFamily: THEME.fonts.primary,
     },
     title: {
       fontWeight: "700",
@@ -18,7 +19,7 @@ const TrashMapCard = ({ name, latitude, longitude }) => {
     },
     info: {
       fontSize: "14px",
-      color: "#555",
+      color: THEME.colors.darkText,
     },
   };
 
