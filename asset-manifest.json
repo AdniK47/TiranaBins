@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/TiranaBins/static/css/main.323d7611.css",
+    "main.js": "/TiranaBins/static/js/main.d7c7027c.js",
+    "static/js/453.5788c3ba.chunk.js": "/TiranaBins/static/js/453.5788c3ba.chunk.js",
+    "static/media/trash_bins.csv": "/TiranaBins/static/media/trash_bins.06af35e4db22fa0cebc8.csv",
+    "index.html": "/TiranaBins/index.html",
+    "main.323d7611.css.map": "/TiranaBins/static/css/main.323d7611.css.map",
+    "main.d7c7027c.js.map": "/TiranaBins/static/js/main.d7c7027c.js.map",
+    "453.5788c3ba.chunk.js.map": "/TiranaBins/static/js/453.5788c3ba.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.323d7611.css",
+    "static/js/main.d7c7027c.js"
+  ]
+}
