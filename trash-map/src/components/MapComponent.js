@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import React, { useState, useEffect } from 'react';
@@ -13,7 +13,7 @@ L.Icon.Default.mergeOptions({
 });
 
 // Custom icon function - different shapes based on type
-const createShapeIcon = (type) => {
+const createShapeIcon = (type, opacity = 1, isUserPin = false) => {
   const colors = {
     general: '#354ce7',    // Gray - Square
     plastic: '#FFA500',    // Orange - Triangle
@@ -23,6 +23,7 @@ const createShapeIcon = (type) => {
   let html = '';
   let iconSize = [30, 30];
   let iconAnchor = [15, 15];
+  const borderStyle = isUserPin ? '2px dotted white' : '2px solid white';
 
   if (type === 'general') {
     // Square for general trash
@@ -32,20 +33,23 @@ const createShapeIcon = (type) => {
         height: 28px;
         background-color: ${colors[type]};
         border-radius: 4px;
-        border: 2px solid white;
+        border: ${borderStyle};
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        opacity: ${opacity};
       "></div>
     `;
   } else if (type === 'plastic') {
     // Triangle for plastic
+    const strokeDasharray = isUserPin ? '5,3' : 'none';
     html = `
       <div style="
         width: 30px;
         height: 26px;
         position: relative;
+        opacity: ${opacity};
       ">
         <svg width="30" height="26" viewBox="0 0 30 26" style="filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));">
-          <polygon points="15,0 30,26 0,26" fill="${colors[type]}" stroke="white" stroke-width="2"/>
+          <polygon points="15,0 30,26 0,26" fill="${colors[type]}" stroke="white" stroke-width="2" ${isUserPin ? 'stroke-dasharray="5,3"' : ''}/>
         </svg>
       </div>
     `;
@@ -59,8 +63,9 @@ const createShapeIcon = (type) => {
         height: 30px;
         background-color: ${colors[type]};
         border-radius: 50%;
-        border: 2px solid white;
+        border: ${borderStyle};
         box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        opacity: ${opacity};
       "></div>
     `;
   }
@@ -74,13 +79,53 @@ const createShapeIcon = (type) => {
   });
 };
 
+// Component to handle map right-clicks and long-press on mobile
+const MapClicker = ({ onMapClick, onLongPress }) => {
+  const [touchStart, setTouchStart] = useState(null);
+  const touchDuration = 500; // milliseconds
+
+  useMapEvents({
+    contextmenu(e) {
+      e.originalEvent.preventDefault();
+      onMapClick(e);
+    },
+    touchstart(e) {
+      setTouchStart(Date.now());
+    },
+    touchend(e) {
+      if (touchStart && Date.now() - touchStart >= touchDuration) {
+        const touch = e.originalEvent.changedTouches[0];
+        if (touch) {
+          const point = this.latLngToContainerPoint([e.latlng.lat, e.latlng.lng]);
+          const latlng = this.containerPointToLatLng([touch.clientX, touch.clientY]);
+          onLongPress({ latlng: latlng });
+        }
+      }
+      setTouchStart(null);
+    }
+  });
+  return null;
+};
+
 const MapComponent = () => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [bins, setBins] = useState([]);
   const [filters, setFilters] = useState({
     general: true,
     plastic: true,
     organic: true
   });
+  const [userPins, setUserPins] = useState([]);
+  const [selectedType, setSelectedType] = useState('general');
+  const [pendingPin, setPendingPin] = useState(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     // Load CSV data
@@ -114,33 +159,64 @@ const MapComponent = () => {
     }));
   };
 
+  const handleMapClick = (e) => {
+    setPendingPin({
+      latitude: e.latlng.lat,
+      longitude: e.latlng.lng
+    });
+    setSelectedType('general');
+  };
+
+  const confirmPin = () => {
+    if (pendingPin) {
+      const newPin = {
+        id: Date.now(),
+        latitude: pendingPin.latitude,
+        longitude: pendingPin.longitude,
+        type: selectedType
+      };
+      setUserPins([...userPins, newPin]);
+      setPendingPin(null);
+    }
+  };
+
+  const cancelPin = () => {
+    setPendingPin(null);
+  };
+
+  const deleteUserPin = (pinId) => {
+    setUserPins(userPins.filter(pin => pin.id !== pinId));
+  };
+
   const filteredBins = bins.filter(bin => filters[bin.type]);
 
   const mapStyles = {
-    height: "500px",
-    width: "100%"
+    height: isMobile ? 'calc(100vh - 200px)' : '500px',
+    width: '100%'
   };
 
   const containerStyle = {
     display: 'flex',
+    flexDirection: isMobile ? 'column' : 'row',
     gap: '10px',
-    height: '500px',
+    height: isMobile ? '100vh' : '500px',
     position: 'relative'
   };
 
   const filterPanelStyle = {
-    width: '120px',
+    width: isMobile ? '100%' : '120px',
     backgroundColor: THEME.colors.white,
     padding: THEME.spacing.medium,
-    borderRadius: '8px',
-    boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+    borderRadius: isMobile ? '0px' : '8px',
+    boxShadow: isMobile ? '0 -2px 10px rgba(0,0,0,0.1)' : '0 2px 10px rgba(0,0,0,0.1)',
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: isMobile ? 'row' : 'column',
     gap: '10px',
     zIndex: 1000,
-    position: 'absolute',
-    left: '10px',
-    bottom: '10px'
+    position: isMobile ? 'relative' : 'absolute',
+    left: isMobile ? 'auto' : '10px',
+    bottom: isMobile ? 'auto' : '10px',
+    overflowX: isMobile ? 'auto' : 'visible'
   };
 
   const buttonStyle = (isActive, color) => ({
@@ -174,14 +250,14 @@ const MapComponent = () => {
           style={buttonStyle(filters.general, '#354ce7')}
           onClick={() => toggleFilter('general')}
         >
-          ● Shtepiake
+          ● Shtëpiake
         </button>
         
         <button
           style={buttonStyle(filters.plastic, '#FFA500')}
           onClick={() => toggleFilter('plastic')}
         >
-          ● Plastika
+          ● Plastikë
         </button>
         
         <button
@@ -191,8 +267,12 @@ const MapComponent = () => {
           ● Organike
         </button>
 
-        <div style={{ fontSize: '11px', color: '#999', marginTop: '5px' }}>
+        <div style={{ fontSize: '11px', color: '#999', marginTop: isMobile ? '0px' : '5px' }}>
           Duke treguar {filteredBins.length} kosha
+        </div>
+
+        <div style={{ fontSize: '11px', color: '#999', marginTop: isMobile ? '0px' : '10px', paddingTop: isMobile ? '0px' : '10px', borderTop: isMobile ? 'none' : '1px solid #ddd' }}>
+          {isMobile ? 'Mbaj të shtypur për të shtuar' : 'Klikoni me të djathtën për të shtuar një kosh të ri!'}
         </div>
       </div>
 
@@ -206,11 +286,13 @@ const MapComponent = () => {
           attribution='&copy; OpenStreetMap contributors'
         />
         
+        <MapClicker onMapClick={handleMapClick} onLongPress={handleMapClick} />
+        
         {filteredBins.map((bin, index) => (
           <Marker 
             key={index}
             position={[bin.latitude, bin.longitude]}
-            icon={createShapeIcon(bin.type)}
+            icon={createShapeIcon(bin.type, 1, false)}
           >
             <Popup>
               <div>
@@ -222,6 +304,100 @@ const MapComponent = () => {
             </Popup>
           </Marker>
         ))}
+
+        {userPins.map((pin) => (
+          <Marker 
+            key={pin.id}
+            position={[pin.latitude, pin.longitude]}
+            icon={createShapeIcon(pin.type, 0.85, true)}
+          >
+            <Popup>
+              <div>
+                <strong>Sugjerimi juaj</strong><br/>
+                Type: <strong>{pin.type.charAt(0).toUpperCase() + pin.type.slice(1)}</strong><br/>
+                Lat: {pin.latitude.toFixed(4)}<br/>
+                Lng: {pin.longitude.toFixed(4)}<br/>
+                <button 
+                  onClick={() => deleteUserPin(pin.id)}
+                  style={{
+                    marginTop: '8px',
+                    padding: '4px 8px',
+                    backgroundColor: '#ff4444',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '12px'
+                  }}
+                >
+                  Hiq
+                </button>
+              </div>
+            </Popup>
+          </Marker>
+        ))}
+
+        {pendingPin && (
+          <Marker 
+            position={[pendingPin.latitude, pendingPin.longitude]}
+            icon={createShapeIcon(selectedType, 0.85, true)}
+          >
+            <Popup>
+              <div>
+                <strong>Zgjidh llojin e koshit:</strong><br/>
+                <select 
+                  value={selectedType} 
+                  onChange={(e) => setSelectedType(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '8px',
+                    marginTop: '8px',
+                    borderRadius: '4px',
+                    border: '1px solid #ccc',
+                    fontSize: '12px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <option value="general">Shtepiake</option>
+                  <option value="plastic">Plastike</option>
+                  <option value="organic">Organike</option>
+                </select>
+                <div style={{ marginTop: '10px', display: 'flex', gap: '5px' }}>
+                  <button 
+                    onClick={confirmPin}
+                    style={{
+                      padding: '6px 12px',
+                      backgroundColor: '#4CAF50',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      fontSize: '12px',
+                      flex: 1
+                    }}
+                  >
+                    Shto
+                  </button>
+                  <button 
+                    onClick={cancelPin}
+                    style={{
+                      padding: '6px 12px',
+                      backgroundColor: '#ff4444',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      fontSize: '12px',
+                      flex: 1
+                    }}
+                  >
+                    Anulo
+                  </button>
+                </div>
+              </div>
+            </Popup>
+          </Marker>
+        )}
       </MapContainer>
     </div>
   );
