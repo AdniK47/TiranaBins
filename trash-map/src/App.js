@@ -1,18 +1,28 @@
-import React from "react";
-import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Header from "./components/Header";
 import Footer from "./components/Footer";
-import MapComponent from './components/MapComponent';
+import Home from "./pages/Home";
+import About from "./pages/Aboutus";
+import Contact from "./pages/Contact";
+import MapPage from "./pages/MapPage";
+import "./style/App.css";
 
 function App() {
   return (
-    <div>
-      <Navbar />
-      <Hero />
-      <MapComponent />
+    <Router>
+      <Header />
+      <main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/map" element={<MapPage />} />
+        </Routes>
+      </main>
       <Footer />
-    </div>
+    </Router>
   );
 }
 
 export default App;
+

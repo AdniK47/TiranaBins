@@ -1,0 +1,45 @@
+ .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: white;
+  border-bottom: 1px solid #ddd;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header .logo {
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: #3a7d44;
+}
+
+.header nav a {
+  margin-left: 1.5rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.header nav a:hover {
+  color: #3a7d44;
+}
+
+.header nav .active {
+  color: #3a7d44;
+}
+
+.header nav .map-button {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid #3a7d44;
+  border-radius: 4px;
+  background: #3a7d44;
+  color: white;
+  transition: 0.2s;
+}
+
+.header nav .map-button:hover {
+  background: white;
+  color: #3a7d44;
+}
