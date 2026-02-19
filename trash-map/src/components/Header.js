@@ -1,20 +1,19 @@
- import { Link, useLocation } from "react-router-dom";
-import "../style/Header.css";
+// src/components/Header.js
+import React from "react";
+import "./../style/Header.css";
 
-function Header() {
-  const location = useLocation();
-
-  return (
-    <header className="header">
-      <div className="logo">TrashFinder</div>
-      <nav>
-        <Link className={location.pathname === "/" ? "active" : ""} to="/">Home</Link>
-        <Link className={location.pathname === "/about" ? "active" : ""} to="/about">About Us</Link>
-        <Link className={location.pathname === "/contact" ? "active" : ""} to="/contact">Contact</Link>
-        <Link className={location.pathname === "/map" ? "active map-button" : "map-button"} to="/map">Map</Link>
-      </nav>
-    </header>
-  );
-}
+const Header = () => (
+  <header className="glass-header">
+    <div className="logo">🌍 TiranaBin</div>
+    <nav>
+      <a href="/" className="nav-link">🏠 Kryefaqja</a>
+      <a href="/about" className="nav-link">ℹ️ Rreth Nesh</a>
+      <a href="/team" className="nav-link">👥 Ekipi</a>
+      <a href="/contact" className="nav-link">📬 Kontakti</a>
+      <a href="/map" className="nav-link map-btn">🗺️ Harta</a>
+    </nav>
+  </header>
+);
 
 export default Header;
+

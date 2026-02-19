@@ -1,0 +1,26 @@
+.about {
+  background: linear-gradient(180deg, #333, #111);
+  position: relative;
+  overflow: hidden;
+}
+
+.about::before {
+  content: "🗑️";
+  position: absolute;
+  font-size: 80px;
+  top: 20%;
+  left: 10%;
+  opacity: 0.2;
+  transform: translateY(var(--scroll, 0));
+}
+
+.about::after {
+  content: "🌱";
+  position: absolute;
+  font-size: 80px;
+  bottom: 20%;
+  right: 10%;
+  opacity: 0.2;
+  transform: translateY(calc(var(--scroll, 0) * -1));
+}
+

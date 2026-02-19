@@ -1,45 +1,38 @@
- .header {
+.glass-header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  backdrop-filter: blur(12px);
+  background: rgba(30,30,30,0.6);
   display: flex;
   justify-content: space-between;
-  align-items: center;
   padding: 1rem 2rem;
-  background: white;
-  border-bottom: 1px solid #ddd;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  transition: 0.3s;
 }
 
-.header .logo {
+nav a {
+  margin: 0 1rem;
+  text-decoration: none;
+  color: #eee;
+  transition: all 0.3s ease;
+}
+
+nav a:hover {
+  color: #00ff88;
+  text-shadow: 0 0 10px #00ff88;
+}
+
+.map-btn {
   font-weight: bold;
-  font-size: 1.5rem;
-  color: #3a7d44;
+  color: #00ff88;
+  animation: pulse 2s infinite;
 }
 
-.header nav a {
-  margin-left: 1.5rem;
-  font-weight: 500;
-  transition: color 0.2s;
+@keyframes pulse {
+  0% { text-shadow: 0 0 5px #00ff88; }
+  50% { text-shadow: 0 0 20px #00ff88; }
+  100% { text-shadow: 0 0 5px #00ff88; }
 }
 
-.header nav a:hover {
-  color: #3a7d44;
-}
 
-.header nav .active {
-  color: #3a7d44;
-}
 
-.header nav .map-button {
-  padding: 0.4rem 0.8rem;
-  border: 1px solid #3a7d44;
-  border-radius: 4px;
-  background: #3a7d44;
-  color: white;
-  transition: 0.2s;
-}
-
-.header nav .map-button:hover {
-  background: white;
-  color: #3a7d44;
-}

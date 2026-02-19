@@ -1,0 +1,41 @@
+ .contact {
+  padding: 100px 20px;
+  background: #1a1a1a;
+  text-align: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 400px;
+  margin: auto;
+}
+
+input, textarea {
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  background: rgba(255,255,255,0.1);
+  color: white;
+  transition: all 0.3s ease;
+}
+
+input:focus, textarea:focus {
+  background: rgba(255,255,255,0.2);
+  box-shadow: 0 0 10px #00ff88;
+}
+
+button {
+  background: #00ff88;
+  color: black;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background: #354ce7;
+  color: white;
+  transform: scale(1.1);
+}
