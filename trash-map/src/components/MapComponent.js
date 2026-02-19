@@ -117,7 +117,6 @@ const MapComponent = () => {
   const [userPins, setUserPins] = useState([]);
   const [selectedType, setSelectedType] = useState('general');
   const [pendingPin, setPendingPin] = useState(null);
-  const [isLoadingBackend, setIsLoadingBackend] = useState(false);
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
 
   useEffect(() => {
@@ -129,8 +128,6 @@ const MapComponent = () => {
   }, []);
 
   useEffect(() => {
-    setIsLoadingBackend(true);
-    
     // Load CSV data
     fetch(trashBinsCsvUrl)
       .then(response => {
@@ -209,9 +206,6 @@ const MapComponent = () => {
           console.error('Error loading from localStorage:', err);
           setUserPins([]);
         }
-      })
-      .finally(() => {
-        setIsLoadingBackend(false);
       });
   }, [BACKEND_URL]);
 
