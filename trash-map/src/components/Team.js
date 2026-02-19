@@ -1,6 +1,6 @@
  // src/components/Team.js
 import React, { useEffect } from "react";
-import "./../style/team.css";
+import "./../style/Team.css";
 import * as THREE from "three";
 
 const Team = () => {

@@ -1,5 +1,5 @@
  import React, { useEffect } from "react";
-import "./../style/ecobackground.css";
+import "./../style/EcoBackground.css";
 
 const EcoBackground = () => {
   useEffect(() => {
