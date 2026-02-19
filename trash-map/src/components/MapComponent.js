@@ -130,10 +130,14 @@ const MapComponent = () => {
   useEffect(() => {
     // Load CSV data
     fetch('/trash_bins.csv')
-      .then(response => response.text())
+      .then(response => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.text();
+      })
       .then(data => {
         const lines = data.trim().split('\n');
         const headers = lines[0].split(',');
+        console.log('CSV headers:', headers);
         
         const binsData = lines.slice(1)
           .filter(line => line.trim().length > 0)
@@ -147,6 +151,7 @@ const MapComponent = () => {
             };
           });
         
+        console.log(`Loaded ${binsData.length} bins:`, binsData);
         setBins(binsData);
       })
       .catch(error => console.error('Error loading CSV:', error));
