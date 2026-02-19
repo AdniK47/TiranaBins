@@ -1,23 +1,23 @@
-name,latitude,longitude,type
-Bin 1,41.3275,19.8187,general
-Bin 2,41.3290,19.8200,plastic
-Bin 3,41.3260,19.8170,organic
-Bin 4,41.3310,19.8150,general
-Bin 5,41.3270,19.8210,plastic
-Bin 6,41.3285,19.8195,organic
-Bin 7,41.3300,19.8180,general
-Bin 8,41.3265,19.8175,plastic
-Skanderbeg Square,41.3276,19.8189,organic
-Palace of Culture,41.3265,19.8205,general
-Naim Frasheri St,41.3295,19.8175,plastic
-Mother Teresa Blvd,41.3310,19.8160,organic
-Blloku - Marin Barleti,41.3245,19.8235,general
-Blloku - Deshmoret e Kombit,41.3235,19.8250,plastic
-Blloku - Ismail Qemali,41.3250,19.8265,organic
-Blloku - Brigada Eighth,41.3260,19.8280,general
-Blloku - Myslym Shyri,41.3240,19.8220,plastic
-Blloku - Sami Frasheri,41.3255,19.8240,organic
-Downtown Center,41.3285,19.8165,general
-Grand Park,41.3320,19.8140,plastic
-Lana River,41.3250,19.8145,organic
-Tirana University,41.3300,19.8210,general
+name,latitude,longitude,type,source
+Bin 1,41.3275,19.8187,general,fixed
+Bin 2,41.3290,19.8200,plastic,fixed
+Bin 3,41.3260,19.8170,organic,fixed
+Bin 4,41.3310,19.8150,general,fixed
+Bin 5,41.3270,19.8210,plastic,fixed
+Bin 6,41.3285,19.8195,organic,fixed
+Bin 7,41.3300,19.8180,general,fixed
+Bin 8,41.3265,19.8175,plastic,fixed
+Skanderbeg Square,41.3276,19.8189,organic,fixed
+Palace of Culture,41.3265,19.8205,general,fixed
+Naim Frasheri St,41.3295,19.8175,plastic,fixed
+Mother Teresa Blvd,41.3310,19.8160,organic,fixed
+Blloku - Marin Barleti,41.3245,19.8235,general,fixed
+Blloku - Deshmoret e Kombit,41.3235,19.8250,plastic,fixed
+Blloku - Ismail Qemali,41.3250,19.8265,organic,fixed
+Blloku - Brigada Eighth,41.3260,19.8280,general,fixed
+Blloku - Myslym Shyri,41.3240,19.8220,plastic,fixed
+Blloku - Sami Frasheri,41.3255,19.8240,organic,fixed
+Downtown Center,41.3285,19.8165,general,fixed
+Grand Park,41.3320,19.8140,plastic,fixed
+Lana River,41.3250,19.8145,organic,fixed
+Tirana University,41.3300,19.8210,general,fixed

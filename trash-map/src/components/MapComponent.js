@@ -117,6 +117,8 @@ const MapComponent = () => {
   const [userPins, setUserPins] = useState([]);
   const [selectedType, setSelectedType] = useState('general');
   const [pendingPin, setPendingPin] = useState(null);
+  const [isLoadingBackend, setIsLoadingBackend] = useState(false);
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
 
   useEffect(() => {
     const handleResize = () => {
@@ -127,6 +129,8 @@ const MapComponent = () => {
   }, []);
 
   useEffect(() => {
+    setIsLoadingBackend(true);
+    
     // Load CSV data
     fetch(trashBinsCsvUrl)
       .then(response => {
@@ -146,21 +150,85 @@ const MapComponent = () => {
               name: values[0],
               latitude: parseFloat(values[1]),
               longitude: parseFloat(values[2]),
-              type: values[3]
+              type: values[3],
+              source: values[4] || 'fixed'  // Default to 'fixed' if not provided
             };
           });
         
         console.log(`Loaded ${binsData.length} bins:`, binsData);
         setBins(binsData);
+
+        // Load user contributions from backend
+        return fetch(`${BACKEND_URL}/api/contributions`);
       })
-      .catch(error => console.error('Error loading CSV:', error));
-  }, []);
+      .then(response => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+      })
+      .then(backendContributions => {
+        console.log(`Loaded ${backendContributions.length} contributions from backend:`, backendContributions);
+        
+        // Convert backend format to expected format
+        const formattedContributions = backendContributions.map((contrib, idx) => ({
+          id: contrib.id || idx,
+          name: contrib.name,
+          latitude: parseFloat(contrib.latitude),
+          longitude: parseFloat(contrib.longitude),
+          type: contrib.type,
+          source: 'user_contribution',
+          createdAt: contrib.createdAt || new Date().toISOString()
+        }));
+        
+        setUserPins(formattedContributions);
+        
+        // Also sync to localStorage for offline access
+        saveUserContributionsToStorage(formattedContributions);
+        
+        // Log contribution stats
+        const stats = backendContributions.reduce((acc, contrib) => {
+          acc.total++;
+          if (acc.hasOwnProperty(contrib.type)) {
+            acc[contrib.type]++;
+          }
+          return acc;
+        }, { total: 0, general: 0, plastic: 0, organic: 0 });
+        
+        console.log('Backend contribution stats:', stats);
+      })
+      .catch(error => {
+        console.error('Error loading from backend:', error);
+        console.log('Falling back to localStorage...');
+        
+        // Fallback to localStorage if backend is unavailable
+        try {
+          const stored = localStorage.getItem('trash_map_user_contributions');
+          const userContributions = stored ? JSON.parse(stored) : [];
+          console.log(`Loaded ${userContributions.length} contributions from localStorage:`, userContributions);
+          setUserPins(userContributions);
+        } catch (err) {
+          console.error('Error loading from localStorage:', err);
+          setUserPins([]);
+        }
+      })
+      .finally(() => {
+        setIsLoadingBackend(false);
+      });
+  }, [BACKEND_URL]);
 
   const toggleFilter = (type) => {
     setFilters(prev => ({
       ...prev,
       [type]: !prev[type]
     }));
+  };
+
+  // Helper function to save contributions to localStorage
+  const saveUserContributionsToStorage = (contributions) => {
+    try {
+      localStorage.setItem('trash_map_user_contributions', JSON.stringify(contributions));
+    } catch (error) {
+      console.error('Error saving to localStorage:', error);
+    }
   };
 
   const handleMapClick = (e) => {
@@ -191,13 +259,50 @@ const MapComponent = () => {
       }
 
       const newPin = {
-        id: Date.now(),
         latitude: lat,
         longitude: lon,
         type: selectedType,
         name
       };
-      setUserPins([...userPins, newPin]);
+
+      try {
+        // Save to backend
+        const response = await fetch(`${BACKEND_URL}/api/contributions`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newPin)
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          const savedPin = {
+            ...result.contribution,
+            id: result.contribution.id || Date.now(),
+            source: 'user_contribution'
+          };
+
+          setUserPins([...userPins, savedPin]);
+          saveUserContributionsToStorage([...userPins, savedPin]);
+          console.log('Contribution saved to backend:', savedPin);
+        } else {
+          throw new Error(`HTTP ${response.status}`);
+        }
+      } catch (error) {
+        console.error('Error saving to backend:', error);
+        
+        // Fallback: Save locally only
+        const localPin = {
+          id: Date.now(),
+          ...newPin,
+          source: 'user_contribution',
+          createdAt: new Date().toISOString()
+        };
+        
+        setUserPins([...userPins, localPin]);
+        saveUserContributionsToStorage([...userPins, localPin]);
+        console.log('Contribution saved locally (backend unavailable):', localPin);
+      }
+
       setPendingPin(null);
     }
   };
@@ -207,7 +312,20 @@ const MapComponent = () => {
   };
 
   const deleteUserPin = (pinId) => {
-    setUserPins(userPins.filter(pin => pin.id !== pinId));
+    try {
+      // Try to delete from backend
+      fetch(`${BACKEND_URL}/api/contributions/${pinId}`, {
+        method: 'DELETE'
+      }).catch(err => console.warn('Could not delete from backend:', err));
+    } catch (err) {
+      console.error('Delete request error:', err);
+    }
+
+    // Remove from state and localStorage
+    const updated = userPins.filter(pin => pin.id !== pinId);
+    setUserPins(updated);
+    saveUserContributionsToStorage(updated);
+    console.log('User contribution deleted:', pinId);
   };
 
   const filteredBins = bins.filter(bin => filters[bin.type]);
@@ -294,6 +412,12 @@ const MapComponent = () => {
           Duke treguar {filteredBins.length} kosha
         </div>
 
+        {userPins.length > 0 && (
+          <div style={{ fontSize: '11px', color: '#4CAF50', marginTop: isMobile ? '0px' : '5px', fontWeight: 'bold' }}>
+            + {userPins.length} sugjerimi
+          </div>
+        )}
+
         <div style={{ fontSize: '11px', color: '#999', marginTop: isMobile ? '0px' : '10px', paddingTop: isMobile ? '0px' : '10px', borderTop: isMobile ? 'none' : '1px solid #ddd' }}>
           {isMobile ? 'Mbaj të shtypur për të shtuar' : 'Klikoni me të djathtën për të shtuar një kosh të ri!'}
         </div>
@@ -321,6 +445,7 @@ const MapComponent = () => {
               <div>
                 <strong>{bin.name}</strong><br/>
                 Type: <strong>{bin.type.charAt(0).toUpperCase() + bin.type.slice(1)}</strong><br/>
+                Source: <strong>{bin.source === 'user_contribution' ? 'Sugjerimi i përdoruesit' : 'I fiksuar'}</strong><br/>
                 Lat: {bin.latitude.toFixed(4)}<br/>
                 Lng: {bin.longitude.toFixed(4)}
               </div>
@@ -338,6 +463,7 @@ const MapComponent = () => {
               <div>
                 <strong>{pin.name || 'Sugjerimi juaj'}</strong><br/>
                 Type: <strong>{pin.type.charAt(0).toUpperCase() + pin.type.slice(1)}</strong><br/>
+                Source: <strong>Sugjerimi i përdoruesit</strong><br/>
                 Lat: {pin.latitude.toFixed(4)}<br/>
                 Lng: {pin.longitude.toFixed(4)}<br/>
                 <button 
