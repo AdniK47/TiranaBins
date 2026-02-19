@@ -155,7 +155,18 @@ const MapComponent = () => {
         console.log(`Loaded ${binsData.length} bins:`, binsData);
         setBins(binsData);
 
-        // Load user contributions from backend
+        // Load user contributions from backend (only if configured)
+        if (!BACKEND_URL || BACKEND_URL.trim() === '') {
+          // No backend configured - use localStorage
+          console.log('Backend URL not configured, using localStorage');
+          const stored = localStorage.getItem('trash_map_user_contributions');
+          const userContributions = stored ? JSON.parse(stored) : [];
+          console.log(`Loaded ${userContributions.length} contributions from localStorage:`, userContributions);
+          setUserPins(userContributions);
+          return; // Exit early
+        }
+
+        // Load from backend
         return fetch(`${BACKEND_URL}/api/contributions`);
       })
       .then(response => {
@@ -260,31 +271,33 @@ const MapComponent = () => {
       };
 
       try {
-        // Save to backend
-        const response = await fetch(`${BACKEND_URL}/api/contributions`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(newPin)
-        });
+        // Try to save to backend if configured
+        if (BACKEND_URL && BACKEND_URL.trim() !== '') {
+          const response = await fetch(`${BACKEND_URL}/api/contributions`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newPin)
+          });
 
-        if (response.ok) {
-          const result = await response.json();
-          const savedPin = {
-            ...result.contribution,
-            id: result.contribution.id || Date.now(),
-            source: 'user_contribution'
-          };
+          if (response.ok) {
+            const result = await response.json();
+            const savedPin = {
+              ...result.contribution,
+              id: result.contribution.id || Date.now(),
+              source: 'user_contribution'
+            };
 
-          setUserPins([...userPins, savedPin]);
-          saveUserContributionsToStorage([...userPins, savedPin]);
-          console.log('Contribution saved to backend:', savedPin);
-        } else {
-          throw new Error(`HTTP ${response.status}`);
+            setUserPins([...userPins, savedPin]);
+            saveUserContributionsToStorage([...userPins, savedPin]);
+            console.log('Contribution saved to backend:', savedPin);
+            setPendingPin(null);
+            return;
+          } else {
+            throw new Error(`HTTP ${response.status}`);
+          }
         }
-      } catch (error) {
-        console.error('Error saving to backend:', error);
-        
-        // Fallback: Save locally only
+
+        // Save locally if no backend configured
         const localPin = {
           id: Date.now(),
           ...newPin,
@@ -294,7 +307,21 @@ const MapComponent = () => {
         
         setUserPins([...userPins, localPin]);
         saveUserContributionsToStorage([...userPins, localPin]);
-        console.log('Contribution saved locally (backend unavailable):', localPin);
+        console.log('Contribution saved locally:', localPin);
+      } catch (error) {
+        console.error('Error saving contribution:', error);
+        
+        // Final fallback: Save locally
+        const localPin = {
+          id: Date.now(),
+          ...newPin,
+          source: 'user_contribution',
+          createdAt: new Date().toISOString()
+        };
+        
+        setUserPins([...userPins, localPin]);
+        saveUserContributionsToStorage([...userPins, localPin]);
+        console.log('Contribution saved locally (fallback):', localPin);
       }
 
       setPendingPin(null);
@@ -306,13 +333,15 @@ const MapComponent = () => {
   };
 
   const deleteUserPin = (pinId) => {
-    try {
-      // Try to delete from backend
-      fetch(`${BACKEND_URL}/api/contributions/${pinId}`, {
-        method: 'DELETE'
-      }).catch(err => console.warn('Could not delete from backend:', err));
-    } catch (err) {
-      console.error('Delete request error:', err);
+    // Try to delete from backend if configured
+    if (BACKEND_URL && BACKEND_URL.trim() !== '') {
+      try {
+        fetch(`${BACKEND_URL}/api/contributions/${pinId}`, {
+          method: 'DELETE'
+        }).catch(err => console.warn('Could not delete from backend:', err));
+      } catch (err) {
+        console.error('Delete request error:', err);
+      }
     }
 
     // Remove from state and localStorage
