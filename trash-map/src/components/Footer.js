@@ -1,26 +1,11 @@
- import React from "react";
-import { THEME } from "../constants/theme";
+import "../style/Footer.css";
 
-const Footer = () => {
-  const styles = {
-    footer: {
-      width: "100%",
-      padding: THEME.spacing.medium,
-      backgroundColor: THEME.colors.primary,
-      color: THEME.colors.white,
-      textAlign: "center",
-      position: "fixed",
-      bottom: 0,
-      left: 0,
-      fontFamily: THEME.fonts.primary,
-    },
-  };
-
+function Footer() {
   return (
-    <footer style={styles.footer}>
-      © 2026 TrashMap. All rights reserved.
+    <footer className="footer">
+      <p>© 2026 TrashFinder. All rights reserved.</p>
     </footer>
   );
-};
+}
 
 export default Footer;

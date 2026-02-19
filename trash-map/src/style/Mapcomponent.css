@@ -1,0 +1,65 @@
+ /* Floating filter panel */
+.filter-panel {
+  width: 140px;
+  background-color: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  z-index: 1000;
+}
+
+.filter-panel .label {
+  font-size: 12px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.filter-panel button {
+  padding: 10px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 13px;
+  background-color: #e0e0e0;
+  color: #666;
+  transition: all 0.3s ease;
+}
+
+/* Active buttons by type */
+.filter-panel button.general.active {
+  background-color: #354ce7;
+  color: white;
+  box-shadow: 0 2px 8px #354ce780;
+}
+
+.filter-panel button.plastic.active {
+  background-color: #FFA500;
+  color: white;
+  box-shadow: 0 2px 8px #FFA50080;
+}
+
+.filter-panel button.organic.active {
+  background-color: #4CAF50;
+  color: white;
+  box-shadow: 0 2px 8px #4CAF5080;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 600px) {
+  .filter-panel {
+    left: 50%;
+    bottom: 10px;
+    transform: translateX(-50%);
+    width: 90%;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+}
