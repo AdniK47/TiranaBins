@@ -167,13 +167,31 @@ const MapComponent = () => {
     setSelectedType('general');
   };
 
-  const confirmPin = () => {
+  const confirmPin = async () => {
     if (pendingPin) {
+      const lat = pendingPin.latitude;
+      const lon = pendingPin.longitude;
+      let name = 'Sugjerimi juaj';
+      try {
+        const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
+        const resp = await fetch(url);
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data) {
+            // prefer street/road name if available
+            name = (data.address && (data.address.road || data.address.pedestrian || data.address.cycleway || data.address.footway)) || data.display_name || name;
+          }
+        }
+      } catch (err) {
+        console.error('Reverse geocode failed', err);
+      }
+
       const newPin = {
         id: Date.now(),
-        latitude: pendingPin.latitude,
-        longitude: pendingPin.longitude,
-        type: selectedType
+        latitude: lat,
+        longitude: lon,
+        type: selectedType,
+        name
       };
       setUserPins([...userPins, newPin]);
       setPendingPin(null);
@@ -189,6 +207,7 @@ const MapComponent = () => {
   };
 
   const filteredBins = bins.filter(bin => filters[bin.type]);
+  const filteredUserPins = userPins.filter(pin => filters[pin.type]);
 
   const mapStyles = {
     height: isMobile ? 'calc(100vh - 200px)' : '500px',
@@ -305,7 +324,7 @@ const MapComponent = () => {
           </Marker>
         ))}
 
-        {userPins.map((pin) => (
+        {filteredUserPins.map((pin) => (
           <Marker 
             key={pin.id}
             position={[pin.latitude, pin.longitude]}
@@ -313,7 +332,7 @@ const MapComponent = () => {
           >
             <Popup>
               <div>
-                <strong>Sugjerimi juaj</strong><br/>
+                <strong>{pin.name || 'Sugjerimi juaj'}</strong><br/>
                 Type: <strong>{pin.type.charAt(0).toUpperCase() + pin.type.slice(1)}</strong><br/>
                 Lat: {pin.latitude.toFixed(4)}<br/>
                 Lng: {pin.longitude.toFixed(4)}<br/>
