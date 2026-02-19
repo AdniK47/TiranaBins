@@ -41,7 +41,6 @@ const createShapeIcon = (type, opacity = 1, isUserPin = false) => {
     `;
   } else if (type === 'plastic') {
     // Triangle for plastic
-    const strokeDasharray = isUserPin ? '5,3' : 'none';
     html = `
       <div style="
         width: 30px;
@@ -97,7 +96,6 @@ const MapClicker = ({ onMapClick, onLongPress }) => {
       if (touchStart && Date.now() - touchStart >= touchDuration) {
         const touch = e.originalEvent.changedTouches[0];
         if (touch) {
-          const point = this.latLngToContainerPoint([e.latlng.lat, e.latlng.lng]);
           const latlng = this.containerPointToLatLng([touch.clientX, touch.clientY]);
           onLongPress({ latlng: latlng });
         }
