@@ -3,6 +3,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import React, { useState, useEffect } from 'react';
 import { THEME } from '../constants/theme';
+import trashBinsCsvUrl from '../trash_bins.csv';
 
 // Fix marker icon issue
 delete L.Icon.Default.prototype._getIconUrl;
@@ -129,7 +130,7 @@ const MapComponent = () => {
 
   useEffect(() => {
     // Load CSV data
-    fetch('/trash_bins.csv')
+    fetch(trashBinsCsvUrl)
       .then(response => {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         return response.text();
