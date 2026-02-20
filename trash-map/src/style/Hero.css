@@ -1,90 +1,139 @@
- /* src/style/Hero.css */
+ /* src/style/Hero.css
+   Hardened hero styles
+*/
 
 .hero {
   position: relative;
   width: 100%;
-  height: 60vh;
-  min-height: 320px;
+  height: 66vh;
+  min-height: 420px;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
   font-family: var(--ui-font);
+  color: var(--text-color);
   padding: 2rem 1rem;
+  background: radial-gradient(1200px 400px at 50% 0%, rgba(0,0,0,0.06), transparent 30%);
 }
 
 .hero-svg {
   position: absolute;
-  left: 0;
-  top: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
-  display: block;
   z-index: 0;
   pointer-events: none;
 }
 
-/* Cloud animation */
-.hero-cloud { transform-origin: center; animation: cloudDrift 18s linear infinite; }
-@keyframes cloudDrift {
-  0% { transform: translateX(-6vw); opacity: 0.06; }
-  50% { transform: translateX(6vw); opacity: 0.08; }
-  100% { transform: translateX(-6vw); opacity: 0.06; }
-}
-
 .hero-content {
   position: relative;
-  z-index: 2;
+  z-index: 6;
   text-align: center;
-  padding: 1rem 2rem;
-  max-width: 900px;
-  width: 100%;
+  max-width: 980px;
+  padding: 0 1rem;
 }
 
-/* Brand title: Tirana (white) + Bin (green accent) */
 .hero-title {
   margin: 0;
   font-size: clamp(2rem, 5vw, 3.6rem);
   font-weight: 900;
-  letter-spacing: -0.02em;
-  text-shadow: 0 8px 28px rgba(2,6,23,0.65);
   font-family: var(--display-font);
-  line-height: 1.02;
-  display: inline-flex;
-  gap: 0.4rem;
-  align-items: baseline;
-  justify-content: center;
+  letter-spacing: -0.02em;
+  color: #fff;
+  text-shadow: 0 12px 40px rgba(2,6,23,0.6);
 }
-
-/* color split */
-.title-white { color: #ffffff; }
 .title-accent { color: var(--accent-1); }
+.hero-sub { margin-top: 0.6rem; color: rgba(255,255,255,0.95); }
 
-/* subtitle / slogan */
-.hero-sub {
-  margin-top: 0.6rem;
-  font-size: clamp(1rem, 2.2vw, 1.25rem);
-  opacity: 0.95;
-  text-shadow: 0 6px 18px rgba(2,6,23,0.45);
-  color: rgba(255,255,255,0.95);
+/* actor base */
+.actor { transform-origin: center; will-change: transform; transition: transform 160ms linear; }
+
+/* breathing idle */
+.actor { animation: actorBreath 6s ease-in-out infinite; }
+@keyframes actorBreath { 0% { transform: translateY(0); } 50% { transform: translateY(-3px); } 100% { transform: translateY(0); } }
+
+/* litterer throwing */
+.actor-litter .arm-right { transform-origin: 6px 6px; animation: throwArm 4s infinite ease-in-out; }
+.actor-litter .hand-trash { animation: handRelease 4s infinite ease-in-out; }
+@keyframes throwArm {
+  0% { transform: rotate(0deg); }
+  28% { transform: rotate(28deg); }
+  48% { transform: rotate(42deg); }
+  68% { transform: rotate(18deg); }
+  100% { transform: rotate(0deg); }
+}
+@keyframes handRelease {
+  0% { transform: translate(0,0) rotate(0deg); opacity: 1; }
+  30% { transform: translate(6px,6px) rotate(10deg); opacity: 1; }
+  50% { transform: translate(18px,28px) rotate(30deg); opacity: 1; }
+  60% { opacity: 0; }
+  100% { transform: translate(0,0) rotate(0deg); opacity: 1; }
 }
 
-/* accent bar under title */
-.hero-title::after {
-  content: "";
-  display: block;
-  width: 64px;
-  height: 6px;
-  margin: 1rem auto 0;
-  border-radius: 6px;
-  background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
-  box-shadow: 0 8px 20px rgba(6,11,30,0.35);
+/* volunteer pick */
+.actor-volunteer .torso { transform-origin: center top; animation: volunteerBend 4s infinite ease-in-out; }
+.actor-volunteer .arm-left { transform-origin: -2px 0px; animation: volunteerReach 4s infinite ease-in-out; }
+.actor-volunteer .arm-right .bag { transform-origin: center; animation: bagSway 4s infinite ease-in-out; }
+@keyframes volunteerBend {
+  0% { transform: translateY(0) rotate(0deg); }
+  45% { transform: translateY(6px) rotate(6deg); }
+  55% { transform: translateY(6px) rotate(6deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+@keyframes volunteerReach {
+  0% { transform: translateY(0) rotate(0deg); }
+  45% { transform: translateY(10px) rotate(-30deg); }
+  55% { transform: translateY(10px) rotate(-30deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+@keyframes bagSway {
+  0% { transform: translateY(0) rotate(0deg); }
+  45% { transform: translateY(6px) rotate(-6deg); }
+  55% { transform: translateY(6px) rotate(-6deg); }
+  100% { transform: translateY(0) rotate(0deg); }
 }
 
-/* Responsive adjustments */
-@media (max-width: 720px) {
-  .hero { height: 50vh; min-height: 260px; padding: 1.25rem 0.75rem; }
-  .hero-title { font-size: clamp(1.6rem, 7vw, 2.4rem); }
-  .hero-sub { font-size: clamp(0.95rem, 3.5vw, 1.05rem); }
+/* passerby casual step */
+.actor-passerby { animation: passerbyStep 5.5s infinite ease-in-out; }
+@keyframes passerbyStep {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-4px) rotate(-1deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+/* bin lid open/close */
+.bin .bin-lid { transform-origin: 50% 100%; transition: transform 260ms ease; }
+.bin.open .bin-lid { transform: rotate(-22deg); }
+
+/* trash items: default hidden; JS toggles in-flight/landed/picked/stale */
+.trash-item {
+  transform-origin: center;
+  will-change: transform, opacity;
+  opacity: 0;
+  transition: opacity 220ms linear, transform 220ms linear;
+  pointer-events: none;
+}
+.trash-item.in-flight { opacity: 1; filter: drop-shadow(0 6px 8px rgba(0,0,0,0.35)); }
+.trash-item.landed {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+.trash-item.picked { opacity: 0; transform: scale(0.6); }
+.trash-item.stale { opacity: 0; transform: scale(0.9); transition: opacity 1200ms ease, transform 1200ms ease; }
+
+/* small parallax for props */
+.park-props { filter: drop-shadow(0 8px 18px rgba(0,0,0,0.45)); }
+
+/* responsive */
+@media (max-width: 900px) {
+  .hero { height: 56vh; min-height: 320px; }
+  .trash-item { display: none; }
+  .actor { animation-duration: 8s; }
+}
+@media (max-width: 520px) {
+  .hero { height: 48vh; min-height: 260px; padding: 1rem 0.5rem; }
+  .hero-title { font-size: 1.6rem; }
+  .actor { display: none; }
 }
