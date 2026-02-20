@@ -1,26 +1,148 @@
-.about {
-  background: linear-gradient(180deg, #333, #111);
+ /* src/style/About.css
+   Prevents squeezed text in feature cards; keeps layout readable and responsive
+*/
+
+:root{
+  --card-bg: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  --text: #dfefff;
+  --muted: #cfe8ff;
+}
+
+/* Container */
+.about-container{
+  background: linear-gradient(180deg, rgba(7,16,36,0.6), rgba(4,8,20,0.6));
+  color: var(--text);
+  padding: 4rem 1rem;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height: 60vh;
+  font-family: var(--ui-font);
+  box-sizing: border-box;
+}
+
+/* Inner card */
+.about-inner{
+  max-width: 1100px;
+  width: 100%;
+  text-align: center;
+  padding: 2rem;
+  background: rgba(255,255,255,0.02);
+  border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(2,6,23,0.6);
   position: relative;
+}
+
+/* Title */
+.about-title{
+  font-family: var(--display-font);
+  font-weight: 900;
+  font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+  margin-bottom: 1rem;
+  color: #fff;
+  letter-spacing: -0.02em;
+}
+
+/* Body paragraphs */
+.about-body{
+  margin: 0 auto 1.75rem;
+  max-width: 880px;
+  text-align: left;
+  color: var(--muted);
+  font-size: clamp(1.05rem, 1.9vw, 1.15rem);
+  line-height: 1.7;
+  padding: 0 0.5rem;
+  box-sizing: border-box;
+}
+
+/* Features grid: larger min width to avoid squeezing */
+.about-features{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+  align-items: start;
+}
+
+/* Each feature uses icon + content columns */
+.feature{
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 1.15rem;
+  display: grid;
+  grid-template-columns: 56px 1fr; /* icon column + content column */
+  gap: 0.9rem;
+  align-items: start;
+  min-height: 120px;
+  box-sizing: border-box;
   overflow: hidden;
+  word-wrap: break-word;
+  hyphens: auto;
 }
 
-.about::before {
-  content: "🗑️";
+/* Icon */
+.feature-icon{
+  width: 56px;
+  height: 56px;
+  flex: 0 0 56px;
+  border-radius: 8px;
+  display: block;
+  align-self: start;
+}
+
+/* Feature heading and paragraph */
+.feature h3{
+  margin: 0 0 0.35rem 0;
+  font-family: var(--display-font);
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  color: #fff;
+  line-height: 1.25;
+  white-space: normal; /* ensure wrapping */
+  word-break: break-word;
+}
+
+.feature p{
+  margin: 0;
+  color: var(--text);
+  font-size: 0.98rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+/* Decorative accents */
+.about-inner::before,
+.about-inner::after{
+  content: "";
   position: absolute;
-  font-size: 80px;
-  top: 20%;
-  left: 10%;
-  opacity: 0.2;
-  transform: translateY(var(--scroll, 0));
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: 0;
 }
 
-.about::after {
-  content: "🌱";
-  position: absolute;
-  font-size: 80px;
-  bottom: 20%;
-  right: 10%;
-  opacity: 0.2;
-  transform: translateY(calc(var(--scroll, 0) * -1));
+.about-inner::before{
+  left: -60px;
+  top: calc(-40px + var(--scroll, 0));
+  background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
 }
 
+.about-inner::after{
+  right: -60px;
+  bottom: calc(-40px - var(--scroll, 0));
+  background: linear-gradient(90deg, var(--accent-2), var(--accent-1));
+}
+
+.about-inner > * { position: relative; z-index: 2; }
+
+/* Responsive adjustments */
+@media (max-width: 720px){
+  .about-inner { padding: 1.25rem; }
+  .about-body { font-size: 1rem; }
+  .about-features { grid-template-columns: 1fr; gap: 0.9rem; }
+  .feature { grid-template-columns: 44px 1fr; padding: 0.9rem; }
+  .feature-icon { width: 44px; height: 44px; }
+  .feature h3 { font-size: 1rem; }
+}
