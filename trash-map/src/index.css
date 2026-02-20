@@ -1,13 +1,23 @@
- /* Import display and UI fonts */
+ /* src/index.css
+   Global variables, resets, and shared UI tokens
+*/
+
+/* Import display and UI fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Montserrat:wght@700;900&display=swap');
 
 :root {
+  /* Typography */
   --display-font: 'Montserrat', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   --ui-font: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  --bg-color: #1a1a1a;
-  --text-color: #eee;
-  --accent-1: #00ff88;
-  --accent-2: #354ce7;
+
+  /* Colors (primary site accents set to green) */
+  --bg-color: #0b1220;
+  --text-color: #e6eef8;
+  --accent-1: #16a34a; /* primary green */
+  --accent-2: #059669; /* darker green */
+
+  /* Utility */
+  --muted: rgba(230,238,248,0.75);
 }
 
 /* Global reset / base */
@@ -34,7 +44,7 @@ h1, h2 {
   color: var(--text-color);
 }
 
-/* Buttons */
+/* Buttons (use accent variables) */
 button {
   background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
   border: none;
@@ -43,14 +53,14 @@ button {
   color: white;
   font-size: 16px;
   cursor: pointer;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
   font-family: var(--ui-font);
   font-weight: 600;
 }
 
 button:hover {
-  transform: scale(1.06);
-  box-shadow: 0 8px 30px rgba(0, 255, 136, 0.12);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 30px rgba(22,163,74,0.12);
 }
 
 /* Dynamic cursor glow */
@@ -59,7 +69,7 @@ button:hover {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(0,255,136,0.95) 0%, rgba(0,255,136,0.15) 40%, transparent 70%);
+  background: radial-gradient(circle, rgba(22,163,74,0.95) 0%, rgba(22,163,74,0.18) 40%, transparent 70%);
   pointer-events: none;
   transform: translate(-50%, -50%);
   z-index: 9999;
@@ -74,7 +84,7 @@ code {
   font-size: 0.95rem;
 }
 
-/* Header / nav helpers (useful for Harta clipping fix) */
+/* Header / nav helpers */
 .header {
   position: fixed;
   top: 0;
@@ -83,11 +93,13 @@ code {
   height: 64px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   padding: 0 1.25rem;
   z-index: 10000;
-  background: rgba(10,12,18,0.18);
+  background: linear-gradient(180deg, rgba(6,8,12,0.18), rgba(6,8,12,0.06));
   backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  box-sizing: border-box;
 }
 
 /* Nav items */
@@ -95,6 +107,9 @@ code {
   display: flex;
   gap: 0.75rem;
   align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .nav-item {
@@ -107,12 +122,17 @@ code {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  transition: transform .12s ease, background .12s ease;
 }
 
+/* CTA map button uses global accent variables */
 .nav-item.cta {
-  background: linear-gradient(90deg, #06b6d4, #1e3a8a);
-  box-shadow: 0 6px 18px rgba(6,11,30,0.45);
+  background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+  box-shadow: 0 8px 30px rgba(6,11,30,0.45);
   color: #fff;
+  padding: 0.5rem 0.9rem;
+  border-radius: 12px;
+  font-weight: 700;
 }
 
 /* Hero defaults (keeps inline SVG hero visible and centered) */
@@ -253,23 +273,6 @@ code {
   box-shadow: 0 8px 24px rgba(2,6,23,0.45);
 }
 
-/* About page container */
-.about-container {
-  max-width: 900px;
-  margin: 3rem auto;
-  padding: 1.5rem;
-  text-align: center;
-  font-size: 1.05rem;
-  line-height: 1.6;
-}
-
-.about-title {
-  font-family: var(--display-font);
-  font-weight: 800;
-  font-size: clamp(1.6rem, 4vw, 2.4rem);
-  margin-bottom: 0.75rem;
-}
-
 /* Utility */
 .hidden { display: none !important; }
 .center { display:flex; align-items:center; justify-content:center; }
@@ -281,5 +284,3 @@ code {
   .hero { height: 50vh; min-height: 260px; }
   .footer-inner { flex-direction: column; gap: 1rem; align-items: center; text-align: center; }
 }
-
-

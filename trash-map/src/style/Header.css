@@ -1,38 +1,117 @@
-.glass-header {
+/* src/style/Header.css - header layout and CTA styling */
+
+:root {
+  --accent-1: #16a34a; /* green */
+  --accent-2: #059669; /* darker green */
+  --text-color: #dfefff;
+  --ui-font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  --display-font: "Montserrat", system-ui, sans-serif;
+}
+
+/* Header container */
+.header {
   position: fixed;
   top: 0;
-  width: 100%;
-  backdrop-filter: blur(12px);
-  background: rgba(30,30,30,0.6);
+  left: 0;
+  right: 0;
+  height: 64px;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  background: linear-gradient(180deg, rgba(10,12,18,0.18), rgba(10,12,18,0.06));
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  padding: 0 1rem;
+  box-sizing: border-box;
+}
+
+/* inner container */
+.header-inner {
+  width: 100%;
+  max-width: 1100px;
+  display: flex;
+  align-items: center;
   justify-content: space-between;
-  padding: 1rem 2rem;
-  transition: 0.3s;
 }
 
-nav a {
-  margin: 0 1rem;
+/* Brand */
+.nav-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
   text-decoration: none;
-  color: #eee;
-  transition: all 0.3s ease;
+  color: var(--text-color);
+  font-family: var(--display-font);
+  font-weight: 800;
+  font-size: 1.05rem;
 }
 
-nav a:hover {
-  color: #00ff88;
-  text-shadow: 0 0 10px #00ff88;
+.brand-icon {
+  width: 36px;
+  height: 36px;
+  display: block;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(6,11,30,0.25);
 }
 
-.map-btn {
-  font-weight: bold;
-  color: #00ff88;
-  animation: pulse 2s infinite;
+.nav-brand-text { display: inline-flex; gap: 0.25rem; align-items: baseline; }
+
+/* Brand color split */
+.brand-white { color: #ffffff; }
+.brand-accent { color: var(--accent-1); }
+
+/* Nav list */
+.nav-list {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-@keyframes pulse {
-  0% { text-shadow: 0 0 5px #00ff88; }
-  50% { text-shadow: 0 0 20px #00ff88; }
-  100% { text-shadow: 0 0 5px #00ff88; }
+/* Nav items */
+.nav-item {
+  padding: 0.45rem 0.75rem;
+  margin: 0 0.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  color: var(--text-color);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: transform .12s ease, background .12s ease;
 }
+
+/* Hover/focus */
+.nav-item:hover,
+.nav-item:focus {
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.02);
+  outline: none;
+}
+
+/* CTA map button: restored green gradient and stronger presence */
+.nav-item.cta {
+  background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+  box-shadow: 0 8px 30px rgba(6,11,30,0.45);
+  color: #fff;
+  padding: 0.5rem 0.9rem;
+  border-radius: 12px;
+  font-weight: 700;
+}
+
+/* small screens */
+@media (max-width: 720px) {
+  .header { height: 56px; padding: 0 0.5rem; }
+  .brand-white { display: none; } /* show only icon on small screens */
+  .nav-list { gap: 0.4rem; }
+  .nav-item { padding: 0.35rem 0.6rem; font-size: 0.95rem; }
+  .nav-item.cta { padding: 0.45rem 0.7rem; }
+}
+
 
 
 
