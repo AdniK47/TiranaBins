@@ -1,11 +1,13 @@
-/* src/style/Header.css - header layout and CTA styling */
+ /* src/style/Header.css - header layout and CTA styling */
 
 :root {
-  --accent-1: #16a34a; /* green */
-  --accent-2: #059669; /* darker green */
+  --header-height: 72px;
+  --accent-1: #16a34a;
+  --accent-2: #059669;
   --text-color: #dfefff;
   --ui-font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   --display-font: "Montserrat", system-ui, sans-serif;
+  --site-neon: rgb(22, 163, 74);
 }
 
 /* Header container */
@@ -14,14 +16,14 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 64px;
+  height: var(--header-height);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10000;
-  background: linear-gradient(180deg, rgba(10,12,18,0.18), rgba(10,12,18,0.06));
+  z-index: 1200; /* high but not absurd */
+  background: linear-gradient(180deg, rgba(10,12,18,0.22), rgba(10,12,18,0.06));
   backdrop-filter: blur(6px);
-  border-bottom: 1px solid rgba(255,255,255,0.03);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
   padding: 0 1rem;
   box-sizing: border-box;
 }
@@ -93,10 +95,10 @@
   outline: none;
 }
 
-/* CTA map button: restored green gradient and stronger presence */
+/* CTA map button */
 .nav-item.cta {
   background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
-  box-shadow: 0 8px 30px rgba(6,11,30,0.45);
+  box-shadow: 0 8px 30px rgba(6,11,30,0.45), 0 0 10px rgba(22,163,74,0.12);
   color: #fff;
   padding: 0.5rem 0.9rem;
   border-radius: 12px;
@@ -105,13 +107,9 @@
 
 /* small screens */
 @media (max-width: 720px) {
-  .header { height: 56px; padding: 0 0.5rem; }
-  .brand-white { display: none; } /* show only icon on small screens */
+  .header { height: calc(var(--header-height) - 8px); padding: 0 0.5rem; }
+  .brand-white { display: none; }
   .nav-list { gap: 0.4rem; }
   .nav-item { padding: 0.35rem 0.6rem; font-size: 0.95rem; }
   .nav-item.cta { padding: 0.45rem 0.7rem; }
 }
-
-
-
-
