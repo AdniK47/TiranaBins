@@ -1,139 +1,120 @@
- /* src/style/Hero.css
-   Hardened hero styles
-*/
+ /* src/style/Hero.css - hero scene and neon accents */
 
+:root {
+  --header-height: 72px;
+  --accent-neon: rgb(120, 255, 90);
+  --accent-neon-alpha: rgba(120, 255, 90, 0.28);
+  --accent-neon-strong: rgba(120, 255, 90, 0.95);
+  --deep-green-text: #1f3b24;
+  --ui-font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  --display-font: "Montserrat", system-ui, sans-serif;
+  --text-color: #dfefff;
+}
+
+/* Reserve space for the fixed header so content doesn't slide under it */
+body {
+  padding-top: var(--header-height);
+  margin: 0;
+}
+
+/* container */
 .hero {
   position: relative;
   width: 100%;
-  height: 66vh;
-  min-height: 420px;
+  height: calc(66vh - var(--header-height));
+  min-height: 360px;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--ui-font);
   color: var(--text-color);
-  padding: 2rem 1rem;
-  background: radial-gradient(1200px 400px at 50% 0%, rgba(0,0,0,0.06), transparent 30%);
+  padding: 1.5rem 1rem;
+  background: rgba(255,255,255,0.02);
+  backdrop-filter: blur(2px);
 }
 
+/* SVG area sits behind hero content */
 .hero-svg {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   z-index: 0;
   pointer-events: none;
+  background: transparent;
 }
 
+/* hero content sits above SVG but below header */
 .hero-content {
   position: relative;
-  z-index: 6;
+  z-index: 10;
   text-align: center;
   max-width: 980px;
   padding: 0 1rem;
 }
 
+/* title */
 .hero-title {
   margin: 0;
-  font-size: clamp(2rem, 5vw, 3.6rem);
+  font-size: clamp(2rem, 5vw, 3.2rem);
   font-weight: 900;
   font-family: var(--display-font);
   letter-spacing: -0.02em;
-  color: #fff;
-  text-shadow: 0 12px 40px rgba(2,6,23,0.6);
+  color: var(--deep-green-text);
+  text-shadow: 0 6px 18px rgba(255,255,255,0.35);
 }
-.title-accent { color: var(--accent-1); }
-.hero-sub { margin-top: 0.6rem; color: rgba(255,255,255,0.95); }
+.title-white { color: #f0f7e6; }
 
-/* actor base */
-.actor { transform-origin: center; will-change: transform; transition: transform 160ms linear; }
-
-/* breathing idle */
-.actor { animation: actorBreath 6s ease-in-out infinite; }
-@keyframes actorBreath { 0% { transform: translateY(0); } 50% { transform: translateY(-3px); } 100% { transform: translateY(0); } }
-
-/* litterer throwing */
-.actor-litter .arm-right { transform-origin: 6px 6px; animation: throwArm 4s infinite ease-in-out; }
-.actor-litter .hand-trash { animation: handRelease 4s infinite ease-in-out; }
-@keyframes throwArm {
-  0% { transform: rotate(0deg); }
-  28% { transform: rotate(28deg); }
-  48% { transform: rotate(42deg); }
-  68% { transform: rotate(18deg); }
-  100% { transform: rotate(0deg); }
-}
-@keyframes handRelease {
-  0% { transform: translate(0,0) rotate(0deg); opacity: 1; }
-  30% { transform: translate(6px,6px) rotate(10deg); opacity: 1; }
-  50% { transform: translate(18px,28px) rotate(30deg); opacity: 1; }
-  60% { opacity: 0; }
-  100% { transform: translate(0,0) rotate(0deg); opacity: 1; }
+/* neon accent for "Bin" */
+.title-accent.neon-bin {
+  color: var(--accent-neon);
+  text-shadow: 0 0 12px var(--accent-neon-alpha);
+  filter: drop-shadow(0 0 14px var(--accent-neon-alpha));
 }
 
-/* volunteer pick */
-.actor-volunteer .torso { transform-origin: center top; animation: volunteerBend 4s infinite ease-in-out; }
-.actor-volunteer .arm-left { transform-origin: -2px 0px; animation: volunteerReach 4s infinite ease-in-out; }
-.actor-volunteer .arm-right .bag { transform-origin: center; animation: bagSway 4s infinite ease-in-out; }
-@keyframes volunteerBend {
-  0% { transform: translateY(0) rotate(0deg); }
-  45% { transform: translateY(6px) rotate(6deg); }
-  55% { transform: translateY(6px) rotate(6deg); }
-  100% { transform: translateY(0) rotate(0deg); }
+/* bins */
+.bin .bin-body {
+  fill: var(--accent-neon) !important;
+  filter: drop-shadow(0 6px 18px var(--accent-neon-alpha)) !important;
 }
-@keyframes volunteerReach {
-  0% { transform: translateY(0) rotate(0deg); }
-  45% { transform: translateY(10px) rotate(-30deg); }
-  55% { transform: translateY(10px) rotate(-30deg); }
-  100% { transform: translateY(0) rotate(0deg); }
-}
-@keyframes bagSway {
-  0% { transform: translateY(0) rotate(0deg); }
-  45% { transform: translateY(6px) rotate(-6deg); }
-  55% { transform: translateY(6px) rotate(-6deg); }
-  100% { transform: translateY(0) rotate(0deg); }
+.bin .bin-lid { transform-origin: 50% 100%; }
+.bin text { font-weight: 700; font-size: 10px; fill: #ffffff; }
+
+/* cursor: keep native cursor on form controls for accessibility */
+body *:not(a):not(button):not(input):not(textarea):not(select) {
+  cursor: none !important;
 }
 
-/* passerby casual step */
-.actor-passerby { animation: passerbyStep 5.5s infinite ease-in-out; }
-@keyframes passerbyStep {
-  0% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-4px) rotate(-1deg); }
-  100% { transform: translateY(0) rotate(0deg); }
-}
-
-/* bin lid open/close */
-.bin .bin-lid { transform-origin: 50% 100%; transition: transform 260ms ease; }
-.bin.open .bin-lid { transform: rotate(-22deg); }
-
-/* trash items: default hidden; JS toggles in-flight/landed/picked/stale */
-.trash-item {
-  transform-origin: center;
-  will-change: transform, opacity;
-  opacity: 0;
-  transition: opacity 220ms linear, transform 220ms linear;
+/* custom cursor */
+.cursor-glow {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
   pointer-events: none;
+  z-index: 9999;
+  background: radial-gradient(circle at 35% 30%,
+    rgba(255,255,255,0.95) 0%,
+    var(--accent-neon) 28%,
+    var(--accent-neon-strong) 48%,
+    var(--accent-neon-alpha) 68%,
+    rgba(0,0,0,0) 100%);
+  box-shadow: 0 0 8px var(--accent-neon-strong), 0 0 18px var(--accent-neon-alpha);
+  transition: transform 80ms linear, opacity 120ms linear;
+  opacity: 0.98;
 }
-.trash-item.in-flight { opacity: 1; filter: drop-shadow(0 6px 8px rgba(0,0,0,0.35)); }
-.trash-item.landed {
-  opacity: 1 !important;
-  transform: none !important;
-  transition: none !important;
-}
-.trash-item.picked { opacity: 0; transform: scale(0.6); }
-.trash-item.stale { opacity: 0; transform: scale(0.9); transition: opacity 1200ms ease, transform 1200ms ease; }
-
-/* small parallax for props */
-.park-props { filter: drop-shadow(0 8px 18px rgba(0,0,0,0.45)); }
+.cursor-glow.cursor-pressed { transform: translate(-50%, -50%) scale(0.85); }
 
 /* responsive */
 @media (max-width: 900px) {
-  .hero { height: 56vh; min-height: 320px; }
-  .trash-item { display: none; }
-  .actor { animation-duration: 8s; }
+  .hero { height: calc(56vh - var(--header-height)); min-height: 300px; }
+  .hero-title { font-size: clamp(1.6rem, 6vw, 2.4rem); }
 }
 @media (max-width: 520px) {
-  .hero { height: 48vh; min-height: 260px; padding: 1rem 0.5rem; }
-  .hero-title { font-size: 1.6rem; }
+  .hero { height: calc(48vh - var(--header-height)); min-height: 220px; padding: 1rem 0.5rem; }
   .actor { display: none; }
+  .cursor-glow { display: none; }
 }

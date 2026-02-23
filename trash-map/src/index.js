@@ -1,10 +1,11 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+ // src/index.js
+import React from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
 
-const container = document.getElementById('root');
+const container = document.getElementById("root");
 if (!container) {
   throw new Error('Root container not found. Ensure public/index.html contains <div id="root"></div>');
 }
@@ -17,6 +18,3 @@ root.render(
 );
 
 reportWebVitals();
-
-
-
