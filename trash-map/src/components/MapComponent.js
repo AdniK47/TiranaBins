@@ -350,130 +350,6 @@ const MapComponent = () => {
     console.log('User contribution deleted:', pinId);
   };
 
-  // Helper function to save contributions to localStorage
-  const saveUserContributionsToStorage = (contributions) => {
-    try {
-      localStorage.setItem('trash_map_user_contributions', JSON.stringify(contributions));
-    } catch (error) {
-      console.error('Error saving to localStorage:', error);
-    }
-  };
-
-  const handleMapClick = (e) => {
-    setPendingPin({
-      latitude: e.latlng.lat,
-      longitude: e.latlng.lng
-    });
-    setSelectedType('general');
-  };
-
-  const confirmPin = async () => {
-    if (pendingPin) {
-      const lat = pendingPin.latitude;
-      const lon = pendingPin.longitude;
-      let name = 'Sugjerimi juaj';
-      try {
-        const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
-        const resp = await fetch(url);
-        if (resp.ok) {
-          const data = await resp.json();
-          if (data) {
-            // prefer street/road name if available
-            name = (data.address && (data.address.road || data.address.pedestrian || data.address.cycleway || data.address.footway)) || data.display_name || name;
-          }
-        }
-      } catch (err) {
-        console.error('Reverse geocode failed', err);
-      }
-
-      const newPin = {
-        latitude: lat,
-        longitude: lon,
-        type: selectedType,
-        name
-      };
-
-      try {
-        // Try to save to backend if configured
-        if (BACKEND_URL && BACKEND_URL.trim() !== '') {
-          const response = await fetch(`${BACKEND_URL}/api/contributions`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newPin)
-          });
-
-          if (response.ok) {
-            const result = await response.json();
-            const savedPin = {
-              ...result.contribution,
-              id: result.contribution.id || Date.now(),
-              source: 'user_contribution'
-            };
-
-            setUserPins([...userPins, savedPin]);
-            saveUserContributionsToStorage([...userPins, savedPin]);
-            console.log('Contribution saved to backend:', savedPin);
-            setPendingPin(null);
-            return;
-          } else {
-            throw new Error(`HTTP ${response.status}`);
-          }
-        }
-
-        // Save locally if no backend configured
-        const localPin = {
-          id: Date.now(),
-          ...newPin,
-          source: 'user_contribution',
-          createdAt: new Date().toISOString()
-        };
-        
-        setUserPins([...userPins, localPin]);
-        saveUserContributionsToStorage([...userPins, localPin]);
-        console.log('Contribution saved locally:', localPin);
-      } catch (error) {
-        console.error('Error saving contribution:', error);
-        
-        // Final fallback: Save locally
-        const localPin = {
-          id: Date.now(),
-          ...newPin,
-          source: 'user_contribution',
-          createdAt: new Date().toISOString()
-        };
-        
-        setUserPins([...userPins, localPin]);
-        saveUserContributionsToStorage([...userPins, localPin]);
-        console.log('Contribution saved locally (fallback):', localPin);
-      }
-
-      setPendingPin(null);
-    }
-  };
-
-  const cancelPin = () => {
-    setPendingPin(null);
-  };
-
-  const deleteUserPin = (pinId) => {
-    // Try to delete from backend if configured
-    if (BACKEND_URL && BACKEND_URL.trim() !== '') {
-      try {
-        fetch(`${BACKEND_URL}/api/contributions/${pinId}`, {
-          method: 'DELETE'
-        }).catch(err => console.warn('Could not delete from backend:', err));
-      } catch (err) {
-        console.error('Delete request error:', err);
-      }
-    }
-
-    // Remove from state and localStorage
-    const updated = userPins.filter(pin => pin.id !== pinId);
-    setUserPins(updated);
-    saveUserContributionsToStorage(updated);
-    console.log('User contribution deleted:', pinId);
-  };
-
   const filteredBins = bins.filter(bin => filters[bin.type]);
   const filteredUserPins = userPins.filter(pin => filters[pin.type]);
 
@@ -526,8 +402,6 @@ const MapComponent = () => {
     color: '#333',
     marginBottom: '5px'
   };
-
-  const tiranCenter = [41.3275, 19.8187];
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '80vh' }}>
