@@ -119,7 +119,7 @@ const MapComponent = () => {
   const [userPins, setUserPins] = useState([]);
   const [selectedType, setSelectedType] = useState('general');
   const [pendingPin, setPendingPin] = useState(null);
-  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || '';
 
   useEffect(() => {
     const handleResize = () => {
