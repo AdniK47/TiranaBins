@@ -1,11 +1,13 @@
+// src/components/MapComponent.js
+import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import React, { useState, useEffect } from 'react';
+import "../style/Mapcomponent.css";
 import { THEME } from '../constants/theme';
 import trashBinsCsvUrl from '../trash_bins.csv';
 
-// Fix marker icon issue
+// Fix default Leaflet marker icons
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
@@ -16,9 +18,9 @@ L.Icon.Default.mergeOptions({
 // Custom icon function - different shapes based on type
 const createShapeIcon = (type, opacity = 1, isUserPin = false) => {
   const colors = {
-    general: '#354ce7',    // Gray - Square
-    plastic: '#FFA500',    // Orange - Triangle
-    organic: '#4CAF50'     // Green - Circle
+    general: '#354ce7',    // Shtepiake - blu
+    plastic: '#FFA500',    // Plastika - portokalli
+    organic: '#4CAF50'     // Organike - jeshile
   };
 
   let html = '';
@@ -127,6 +129,7 @@ const MapComponent = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Ngarko të dhënat nga CSV
   useEffect(() => {
     // Load CSV data
     fetch(trashBinsCsvUrl)
@@ -221,11 +224,7 @@ const MapComponent = () => {
   }, [BACKEND_URL]);
 
   const toggleFilter = (type) => {
-    setFilters(prev => ({
-      ...prev,
-      [type]: !prev[type]
-    }));
-  };
+    setFilters(prev => ({ ...prev, [type]: !prev[type] }));};
 
   // Helper function to save contributions to localStorage
   const saveUserContributionsToStorage = (contributions) => {
@@ -354,6 +353,7 @@ const MapComponent = () => {
   const filteredBins = bins.filter(bin => filters[bin.type]);
   const filteredUserPins = userPins.filter(pin => filters[pin.type]);
 
+  const tiranCenter = [41.3275, 19.8187]; // Qendra e Tiranës
   const mapStyles = {
     height: isMobile ? 'calc(100vh - 200px)' : '500px',
     width: '100%'
@@ -403,36 +403,35 @@ const MapComponent = () => {
     marginBottom: '5px'
   };
 
-  const tiranCenter = [41.3275, 19.8187];
-
   return (
-    <div style={containerStyle}>
-      <div style={filterPanelStyle}>
-        <div style={labelStyle}>Kategoria:</div>
+    <div style={{ position: 'relative', width: '100%', height: '80vh' }}>
+      {/* Paneli i filtrave */}
+      <div className="filter-panel">
+        <div className="label">Kategoria:</div>
         
         <button
-          style={buttonStyle(filters.general, '#354ce7')}
+          className={`general ${filters.general ? 'active' : ''}`}
           onClick={() => toggleFilter('general')}
         >
           ● Shtëpiake
         </button>
-        
+
         <button
-          style={buttonStyle(filters.plastic, '#FFA500')}
+          className={`plastic ${filters.plastic ? 'active' : ''}`}
           onClick={() => toggleFilter('plastic')}
         >
           ● Plastikë
         </button>
-        
+
         <button
-          style={buttonStyle(filters.organic, '#4CAF50')}
+          className={`organic ${filters.organic ? 'active' : ''}`}
           onClick={() => toggleFilter('organic')}
         >
           ● Organike
         </button>
 
-        <div style={{ fontSize: '11px', color: '#999', marginTop: isMobile ? '0px' : '5px' }}>
-          Duke treguar {filteredBins.length} kosha
+        <div style={{ fontSize: '11px', color: '#999', marginTop: '5px' }}>
+          Po tregohen {filteredBins.length} kosha
         </div>
 
         {userPins.length > 0 && (
@@ -446,11 +445,8 @@ const MapComponent = () => {
         </div>
       </div>
 
-      <MapContainer 
-        center={tiranCenter} 
-        zoom={15} 
-        style={mapStyles}
-      >
+      {/* Mapa */}
+      <MapContainer center={tiranCenter} zoom={15} style={{ width: '100%', height: '100%' }}>
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; OpenStreetMap contributors'
@@ -467,7 +463,7 @@ const MapComponent = () => {
             <Popup>
               <div>
                 <strong>{bin.name}</strong><br/>
-                Type: <strong>{bin.type.charAt(0).toUpperCase() + bin.type.slice(1)}</strong><br/>
+                Lloji: <strong>{bin.type.charAt(0).toUpperCase() + bin.type.slice(1)}</strong><br/>
                 Source: <strong>{bin.source === 'user_contribution' ? 'Sugjerimi i përdoruesit' : 'I fiksuar'}</strong><br/>
                 Lat: {bin.latitude.toFixed(4)}<br/>
                 Lng: {bin.longitude.toFixed(4)}
@@ -576,3 +572,4 @@ const MapComponent = () => {
 };
 
 export default MapComponent;
+
