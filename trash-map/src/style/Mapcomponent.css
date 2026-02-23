@@ -7,6 +7,7 @@
   border-radius: 12px;
   color: white;
   font-size: 14px;
+  z-index: 1000;
 }
 
 .filter-panel button {
@@ -16,6 +17,12 @@
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
+  background-color: #666;
+  color: white;
+}
+
+.filter-panel button:hover {
+  background-color: #888;
 }
 
 .filter-panel button.active {
