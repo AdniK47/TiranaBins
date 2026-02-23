@@ -420,7 +420,7 @@ const MapComponent = () => {
           className={`plastic ${filters.plastic ? 'active' : ''}`}
           onClick={() => toggleFilter('plastic')}
         >
-          ● Plastikë
+          ● Plastike
         </button>
 
         <button
@@ -436,7 +436,7 @@ const MapComponent = () => {
 
         {userPins.length > 0 && (
           <div style={{ fontSize: '11px', color: '#4CAF50', marginTop: isMobile ? '0px' : '5px', fontWeight: 'bold' }}>
-            + {userPins.length} sugjerimi
+            + {userPins.length} sugjerime nga përdoruesi
           </div>
         )}
 
