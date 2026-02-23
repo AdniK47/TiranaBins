@@ -8,7 +8,7 @@ export default function Footer() {
         <div className="col about">
           <div className="brand">TiranaBin</div>
           <p className="about-text">
-            Ndërtuar nga Ekipi TiranaBin si pjesë e projektit universitar.
+            Ndërtuar nga Ekipi TiranaBin si pjesë e projektit të festivalit të shkencave.
           </p>
         </div>
 
