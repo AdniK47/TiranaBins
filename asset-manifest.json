@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/TiranaBins/static/css/main.d13fb11b.css",
-    "main.js": "/TiranaBins/static/js/main.6d893650.js",
+    "main.js": "/TiranaBins/static/js/main.6ac7aaeb.js",
     "static/js/453.5788c3ba.chunk.js": "/TiranaBins/static/js/453.5788c3ba.chunk.js",
     "static/media/trash_bins.csv": "/TiranaBins/static/media/trash_bins.7a98bde8133bc040ae33.csv",
     "index.html": "/TiranaBins/index.html",
     "main.d13fb11b.css.map": "/TiranaBins/static/css/main.d13fb11b.css.map",
-    "main.6d893650.js.map": "/TiranaBins/static/js/main.6d893650.js.map",
+    "main.6ac7aaeb.js.map": "/TiranaBins/static/js/main.6ac7aaeb.js.map",
     "453.5788c3ba.chunk.js.map": "/TiranaBins/static/js/453.5788c3ba.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.d13fb11b.css",
-    "static/js/main.6d893650.js"
+    "static/js/main.6ac7aaeb.js"
   ]
 }
