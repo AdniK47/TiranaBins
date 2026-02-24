@@ -22,12 +22,6 @@ function generateActors() {
   ];
 }
 
-const BINS = [
-  { id: "bin-1", x: 220, y: 230, label: "Letër" },
-  { id: "bin-2", x: 560, y: 230, label: "Plastikë" },
-  { id: "bin-3", x: 900, y: 230, label: "Organike" },
-];
-
 export default function Hero() {
   const actors = useMemo(() => generateActors(), []);
 
@@ -79,16 +73,6 @@ export default function Hero() {
           <use href="#bench" transform="translate(640,270) scale(1)" />
           <use href="#bench" transform="translate(820,270) scale(1)" />
         </g>
-
-        {BINS.map((b) => (
-          <g key={b.id} className="bin" transform={`translate(${b.x},${b.y})`}>
-            <rect className="bin-body" x="-22" y="-34" width="44" height="44" rx="6" />
-            <rect className="bin-lid" x="-24" y="-44" width="48" height="12" rx="3" fill="#0f3f1a" />
-            <text x="0" y="-6" textAnchor="middle" fontSize="10" fill="#fff" fontFamily="sans-serif" fontWeight="700">
-              {b.label}
-            </text>
-          </g>
-        ))}
 
         <g className="ground-litter" opacity="0.95">
           <use href="#trash-paper" x="200" y="300" className="trash-item" />
