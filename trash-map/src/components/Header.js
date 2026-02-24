@@ -1,11 +1,12 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "../style/Header.css";
 
 export default function Header() {
   return (
     <header className="header" role="banner" aria-label="Main navigation">
       <div className="header-inner">
-        <a href="/" className="nav-brand" aria-label="TiranaBin home">
+        <Link to="/" className="nav-brand" aria-label="TiranaBin home">
           <svg className="brand-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <defs>
               <linearGradient id="brandGrad" x1="0" x2="1">
@@ -19,15 +20,15 @@ export default function Header() {
             <span className="brand-white">Tirana</span>
             <span className="brand-accent">Bin</span>
           </span>
-        </a>
+        </Link>
 
         <nav aria-label="Primary">
           <ul className="nav-list" role="menubar">
-            <li role="none"><a role="menuitem" href="/" className="nav-item">Kryefaqja</a></li>
-            <li role="none"><a role="menuitem" href="/about" className="nav-item">Rreth Nesh</a></li>
-            <li role="none"><a role="menuitem" href="/team" className="nav-item">Ekipi</a></li>
-            <li role="none"><a role="menuitem" href="/contact" className="nav-item">Kontakti</a></li>
-            <li role="none"><a role="menuitem" href="/map" className="nav-item cta">Harta</a></li>
+            <li role="none"><Link role="menuitem" to="/" className="nav-item">Kryefaqja</Link></li>
+            <li role="none"><Link role="menuitem" to="/about" className="nav-item">Rreth Nesh</Link></li>
+            <li role="none"><Link role="menuitem" to="/team" className="nav-item">Ekipi</Link></li>
+            <li role="none"><Link role="menuitem" to="/contact" className="nav-item">Kontakti</Link></li>
+            <li role="none"><Link role="menuitem" to="/map" className="nav-item cta">Harta</Link></li>
           </ul>
         </nav>
       </div>
