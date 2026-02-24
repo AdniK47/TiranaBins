@@ -102,7 +102,7 @@ export default function App() {
   }, []);
 
   return (
-    <Router basename="/TiranaBins">
+    <Router>
       <EcoBackground />
       <ParticleBackground />
 
