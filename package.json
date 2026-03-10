@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "@react-google-maps/api": "^2.20.8",
-    "react-scripts": "^0.0.0"
-  }
-}
